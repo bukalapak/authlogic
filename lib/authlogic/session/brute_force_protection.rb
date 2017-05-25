@@ -74,7 +74,7 @@ module Authlogic
         # that 2 hour period this method will return true.
         def being_brute_force_protected?
           exceeded_failed_logins_limit? && (failed_login_ban_for <= 0 ||
-            (attempted_record.respond_to?(:updated_at) && attempted_record.updated_at >= failed_login_ban_for.seconds.ago))
+            (attempted_record.respond_to?(:current_login_at) && attempted_record.current_login_at >= failed_login_ban_for.seconds.ago))
         end
 
         private
