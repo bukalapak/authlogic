@@ -54,7 +54,9 @@ module Authlogic
               if attempted_record.respond_to?(:failed_login_count)
                 attempted_record.failed_login_count ||= 0
                 attempted_record.failed_login_count += 1
-              elsif attempted_record.respond_to?(:last_failed_login_at)
+              end
+              
+              if attempted_record.respond_to?(:last_failed_login_at)
                 attempted_record.last_failed_login_at = klass.default_timezone == :utc ? Time.now.utc : Time.now
               end
             end
