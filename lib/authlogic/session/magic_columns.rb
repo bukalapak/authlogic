@@ -6,7 +6,6 @@ module Authlogic
     #   login_count           Increased every time an explicit login is made. This will *NOT* increase if logging in by a session, cookie, or basic http auth
     #   failed_login_count    This increases for each consecutive failed login. See Authlogic::Session::BruteForceProtection and the consecutive_failed_logins_limit config option for more details.
     #   last_request_at       Updates every time the user logs in, either by explicitly logging in, or logging in by cookie, session, or http auth
-    #   last_failed_login_at  Updates with the current_time when an explicit failed login is made.
     #   current_login_at      Updates with the current time when an explicit login is made.
     #   last_login_at         Updates with the value of current_login_at before it is reset.
     #   current_login_ip      Updates with the request ip when an explicit login is made.
@@ -42,15 +41,9 @@ module Authlogic
       module InstanceMethods
         private
           def increase_failed_login_count
-            if invalid_password?
-              if attempted_record.respond_to?(:failed_login_count)
-                attempted_record.failed_login_count ||= 0
-                attempted_record.failed_login_count += 1
-              end
-              
-              if attempted_record.respond_to?(:last_failed_login_at)
-                attempted_record.last_failed_login_at = klass.default_timezone == :utc ? Time.now.utc : Time.now
-              end
+            if invalid_password? && attempted_record.respond_to?(:failed_login_count)
+              attempted_record.failed_login_count ||= 0
+              attempted_record.failed_login_count += 1
             end
           end
 
