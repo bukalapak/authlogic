@@ -53,14 +53,9 @@ module Authlogic
       
       # The methods available for an Authlogic::Session::Base object that make up the brute force protection feature.
       module InstanceMethods
-        # Returns true when the consecutive_failed_logins_limit has been exceeded and is being temporarily banned.
-        # Notice the word temporary, the user will not be permanently banned unless you choose to do so with configuration.
-        # By default they will be banned for 2 hours. During that 2 hour period this method will return true.
+        # Remove brute force protection; lets put this brute force thingy to Cloudflare I guess
         def being_brute_force_protected?
-          exceeded_failed_logins_limit? && (failed_login_ban_for <= 0 ||
-            (attempted_record.respond_to?(:current_login_at) &&
-              attempted_record.current_login_at &&
-              attempted_record.current_login_at >= failed_login_ban_for.seconds.ago))
+          false
         end
         
         private
